@@ -1,0 +1,1 @@
+export { ResolutionSwitch } from './ResolutionSwitch';
