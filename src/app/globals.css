@@ -1,0 +1,385 @@
+@import 'tailwindcss';
+
+/*
+ * Direction: "One motif" (taste skill, seed 1781480307). Palette "Soot and
+ * lime", type Switzer. The motif is the H3 hexagon: the folder tabs are half
+ * hexagons, buttons and bullets are hexagons, pictures sit in hexagon masks.
+ */
+@theme {
+  --color-soot: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-surface-2: #262626;
+  --color-ink: #ffffff;
+  --color-muted: #9a9a9a;
+  --color-lime: #dafa9c;
+  --color-paper: #ffffff;
+  --color-paper-2: #ecece6;
+  --color-charcoal: #141414;
+  --color-muted-dark: #575757;
+
+  --font-sans: 'Switzer', ui-sans-serif, system-ui, sans-serif;
+
+  /* The five type steps; nothing else is used */
+  --text-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --text-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --text-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --text-display: clamp(4.5rem, 10vw, 10rem);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+:root {
+  color-scheme: dark;
+  --margin: clamp(1rem, 3vw, 2rem);
+  --t-press: 140ms;
+  --t-hover: 180ms;
+  --t-ui: 240ms;
+  --t-reveal: 800ms;
+  /* A hexagon stretched sideways: the button and pill shape */
+  --hex-wide: polygon(
+    0.9em 0,
+    calc(100% - 0.9em) 0,
+    100% 50%,
+    calc(100% - 0.9em) 100%,
+    0.9em 100%,
+    0 50%
+  );
+  /* A regular pointy-top hexagon: bullets, masks, markers */
+  --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  /* A short hexagon for switch tracks */
+  --hex-switch: polygon(
+    0.32em 0,
+    calc(100% - 0.32em) 0,
+    100% 50%,
+    calc(100% - 0.32em) 100%,
+    0.32em 100%,
+    0 50%
+  );
+  /* Half a flat-top hexagon: the folder tabs */
+  --hex-half: polygon(1.1em 0, calc(100% - 1.1em) 0, 100% 100%, 0 100%);
+}
+
+html {
+  background: var(--color-soot);
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (pointer: fine) {
+  html {
+    overscroll-behavior: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--color-soot);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+button,
+a,
+input {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-lime);
+  outline-offset: 3px;
+}
+
+/* On lime and white fields the lime ring disappears: use the ink */
+.on-light :focus-visible {
+  outline-color: var(--color-charcoal);
+}
+
+[id] {
+  scroll-margin-top: 1.5rem;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- The motif ---------- */
+
+.hex-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  min-height: 3rem;
+  padding: 0 1.6em;
+  background: var(--color-lime);
+  color: var(--color-charcoal);
+  font-weight: 500;
+  clip-path: var(--hex-wide);
+  transition:
+    transform var(--t-press) var(--ease-out),
+    background-color var(--t-hover) ease,
+    color var(--t-hover) ease;
+}
+
+.hex-button:active {
+  transform: scale(0.97);
+}
+
+.hex-button[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hex-button--ink {
+  background: var(--color-charcoal);
+  color: var(--color-ink);
+}
+
+.hex-button--quiet {
+  background: var(--color-surface-2);
+  color: var(--color-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hex-button:not([disabled]):hover {
+    background: var(--color-ink);
+    color: var(--color-charcoal);
+  }
+
+  .hex-button--ink:not([disabled]):hover {
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+  }
+}
+
+/* clip-path also clips the outline, so the focused button inverts instead */
+.hex-button:focus-visible {
+  outline: none;
+  background: var(--color-ink);
+  color: var(--color-charcoal);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.hex-bullet {
+  display: inline-block;
+  width: 0.62em;
+  height: 0.7em;
+  flex: none;
+  background: currentColor;
+  clip-path: var(--hex);
+}
+
+.hex-mask {
+  clip-path: var(--hex);
+}
+
+.link {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 0.07em;
+  transition: text-decoration-color var(--t-hover) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* ---------- Motion (content stays visible without JS) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-rise] {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: rise var(--t-reveal) var(--ease-out) forwards;
+    animation-delay: calc(var(--i, 0) * 90ms + 120ms);
+  }
+
+  .js .folder {
+    transform: translateY(40px);
+    animation: folder-in 900ms var(--ease-out) forwards;
+    animation-delay: calc(var(--i, 0) * 70ms + 260ms);
+  }
+
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 700ms var(--ease-out),
+      transform 900ms var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 75ms);
+  }
+
+  .js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .js .drift {
+    animation: drift 24s var(--ease-in-out) infinite alternate;
+  }
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes folder-in {
+  to {
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.06) translate(-1%, -1%);
+  }
+  to {
+    transform: scale(1.12) translate(1.5%, 1%);
+  }
+}
+
+/* ---------- Leaflet, restyled for the soot ground ---------- */
+
+.leaflet-container {
+  background: var(--color-surface);
+  font-family: var(--font-sans);
+}
+
+/* OpenStreetMap's own tiles, darkened in place so the map sits on the soot
+   ground; only the tiles are filtered, never the hexagons or couriers */
+.leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) grayscale(1) brightness(0.72)
+    contrast(1.15);
+}
+
+.leaflet-control-attribution {
+  background: rgb(15 15 15 / 0.8) !important;
+  color: var(--color-muted) !important;
+  font-size: 11px;
+}
+
+.leaflet-control-attribution a {
+  color: var(--color-ink) !important;
+}
+
+.leaflet-bar a {
+  background: var(--color-surface-2) !important;
+  color: var(--color-ink) !important;
+  border: none !important;
+}
+
+.leaflet-tooltip {
+  background: var(--color-charcoal);
+  color: var(--color-ink);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+}
+
+.leaflet-tooltip::before {
+  display: none;
+}
+
+/* The request preview swaps with a short crossfade */
+@media (prefers-reduced-motion: no-preference) {
+  .crossfade {
+    animation: crossfade var(--t-ui) var(--ease-out) both;
+  }
+}
+
+@keyframes crossfade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Content column: the width of Tailwind's max-w-7xl (80rem), centred, with
+   the page margin inside it. Backgrounds stay full-bleed; content lines up. */
+.px-page {
+  padding-inline: max(var(--margin), calc((100% - 80rem) / 2 + var(--margin)));
+}
+
+/* The courier that got the last order: blue, so it never reads as free
+   (white) or busy (lime). The ring pulses unless motion is reduced. */
+:root {
+  --color-assigned: #3d8bff;
+}
+
+.assigned-courier {
+  position: relative;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 9999px;
+  background: var(--color-assigned);
+  border: 3px solid #ffffff;
+}
+
+.assigned-courier svg {
+  width: 18px;
+  height: 18px;
+}
+
+.assigned-courier::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 3px solid var(--color-assigned);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .assigned-courier::after {
+    animation: assigned-pulse 1.6s var(--ease-out) infinite;
+  }
+}
+
+@keyframes assigned-pulse {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+.leaflet-tooltip.assigned-label {
+  background: var(--color-assigned);
+  color: #ffffff;
+  font-weight: 500;
+}
