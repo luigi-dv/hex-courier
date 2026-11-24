@@ -2,12 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { POLL_MS } from '@/constants/city';
+
 import type { Courier } from '@/types/Courier';
 
-const GLIDE_MS = 1000;
+/** One glide per poll, so couriers keep moving until the next position lands */
+const GLIDE_MS = POLL_MS;
 
 /**
- * Positions arrive once a second; this glides each courier from where it was
+ * Positions arrive once per poll; this glides each courier from where it was
  * drawn to where the server says it is, so they drive instead of jumping.
  * With reduced motion, positions are used as they arrive.
  */
