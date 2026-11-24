@@ -27,3 +27,9 @@ export const WANDER_M = 25;
 
 /** Couriers on a delivery move this far per tick: about 65 km/h, fast so the demo doesn't drag */
 export const DELIVERY_SPEED_M = 18;
+
+/** How often an open, on-screen map asks for the city (ms) */
+export const POLL_MS = 3000;
+
+/** The map stops polling after this long without any input (ms) */
+export const POLL_IDLE_MS = 5 * 60 * 1000;
