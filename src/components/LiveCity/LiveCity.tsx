@@ -109,13 +109,23 @@ export const LiveCity = () => {
 
   const placeSample = useCallback(
     async (from: LatLng, to: LatLng) => {
-      // Make room first, so the demo never runs the city out of couriers
+      // Make room first, so the demo never runs the city out of couriers.
+      // Count the whole city, not just this tab: the city outlives a reload
+      // and is shared by every tab with the same cookie.
       const onRoad = autoplayOrders.current.filter((id) =>
         active.some((order) => order.id === id)
       );
-      if (onRoad.length >= AUTOPLAY_ON_ROAD) {
-        await completeOrder(onRoad[0]).catch(() => undefined);
-        autoplayOrders.current = onRoad.slice(1);
+      const others = active
+        .map((order) => order.id)
+        .filter((id) => !onRoad.includes(id));
+      const excess = active.length - AUTOPLAY_ON_ROAD + 1;
+      if (excess > 0) {
+        // Oldest first, this tab's own orders before anyone else's
+        const done = [...onRoad, ...others].slice(0, excess);
+        await Promise.all(
+          done.map((id) => completeOrder(id).catch(() => undefined))
+        );
+        autoplayOrders.current = onRoad.filter((id) => !done.includes(id));
       }
       setPickup(from);
       setDropoff(to);
