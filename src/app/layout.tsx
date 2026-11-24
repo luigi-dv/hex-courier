@@ -1,10 +1,22 @@
 import React from 'react';
 
+import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/next';
 
 import type { Metadata, Viewport } from 'next';
 
 import './globals.css';
+
+// Self-hosted, so the type never depends on a third-party CDN being reachable
+const switzer = localFont({
+  display: 'swap',
+  src: [
+    { path: '../fonts/Switzer-400.woff2', style: 'normal', weight: '400' },
+    { path: '../fonts/Switzer-500.woff2', style: 'normal', weight: '500' },
+    { path: '../fonts/Switzer-600.woff2', style: 'normal', weight: '600' },
+  ],
+  variable: '--font-switzer',
+});
 
 export const metadata: Metadata = {
   description:
@@ -24,23 +36,13 @@ export default function RootLayout({
 }) {
   return (
     // The inline script adds `js` to <html> before React hydrates, on purpose
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en' className={switzer.variable} suppressHydrationWarning>
       <head>
         {/* Gates the entrance animations: without JS everything is simply visible */}
         <script
           dangerouslySetInnerHTML={{
             __html: "document.documentElement.classList.add('js')",
           }}
-        />
-        <link rel='preconnect' href='https://api.fontshare.com' />
-        <link
-          rel='preconnect'
-          href='https://cdn.fontshare.com'
-          crossOrigin=''
-        />
-        <link
-          rel='stylesheet'
-          href='https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap'
         />
         <link
           rel='preconnect'
