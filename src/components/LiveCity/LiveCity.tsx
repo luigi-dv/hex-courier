@@ -60,7 +60,8 @@ const statusLabel: Record<string, string> = {
 export const LiveCity = () => {
   const reduceMotion = usePrefersReducedMotion();
   const { resolution, setResolution } = useResolution();
-  const { city, error: cityError, refresh } = useCity();
+  const section = useRef<HTMLElement>(null);
+  const { city, error: cityError, refresh, watching } = useCity(section);
   const couriers = useSmoothCouriers(city?.couriers ?? [], reduceMotion);
 
   const [pickup, setPickup] = useState<LatLng | null>(null);
@@ -139,7 +140,8 @@ export const LiveCity = () => {
     once: reduceMotion,
     place: placeSample,
     ready: Boolean(city),
-    running: autoplay,
+    // Autoplay places orders, so it pauses whenever nobody is watching
+    running: autoplay && watching,
   });
 
   const takeOver = () => {
@@ -222,6 +224,7 @@ export const LiveCity = () => {
 
   return (
     <section
+      ref={section}
       id='live'
       aria-labelledby='live-title'
       className='folder relative mx-auto w-[min(80rem,100%-2*var(--margin))] bg-surface pb-16 max-sm:w-full'

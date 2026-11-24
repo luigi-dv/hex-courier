@@ -117,7 +117,7 @@ Without Redis, production refuses to start rather than quietly keeping cities in
 
 - **Real travel time.** Distance here is a straight line. A courier across the river can look close and be 15 minutes away. [OSRM](https://project-osrm.org) or [Valhalla](https://github.com/valhalla/valhalla) on the top candidates would fix that.
 - **A shared index for big fleets**, in Redis sets or Postgres, behind the same lookup.
-- **Server-Sent Events** instead of polling every second.
+- **Server-Sent Events** instead of polling every three seconds.
 - **A supply and demand map**: orders and couriers per cell, to show where surge pricing would kick in.
 
 ## License
